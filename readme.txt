@@ -1,64 +1,80 @@
-# App Kalyanam - Comprehensive Event & Wedding Management Platform
+# 🇮🇳 India Locations JSON Data
 
-## What is this App For?
-App Kalyanam is a complete end-to-end event and wedding management ecosystem designed to streamline the process of booking event spaces (auditoriums/banquet halls) and managing associated services (catering, decoration, photography, stage, and sound). 
+[![JSON Data](https://img.shields.io/badge/Data-JSON-blue.svg)](#)
+[![Locations](https://img.shields.io/badge/Locations-600k%2B-success.svg)](#)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](#)
 
-It serves multiple types of users:
-1. **Clients/Customers**: Can browse available event rooms, check availability, book rooms along with various services, and track their bookings and events.
-2. **Superadmins/Platform Owners**: Have a birds-eye view of all bookings, revenue, expenses, and margins. They can assign tasks to team members and approve partner registrations.
-3. **Partners (Auditorium Owners / Event Management)**: Third-party vendors who list their services or spaces on the platform.
-4. **Team Members/Staff**: Internal staff organized by departments (food, catering, decoration, etc.) who receive assigned tasks for specific bookings and can log expenses.
-
-## Architecture and Technology Stack
-The project is built as a monorepo utilizing a modern, scalable tech stack:
-- **Frontend**: Flutter (Mobile/Web) utilizing Riverpod for state management and GoRouter for declarative routing.
-- **Backend**: Supabase (PostgreSQL) for authentication, database, Row Level Security (RLS), and file storage.
-
-### Directory Structure
-The repository is split into four primary components:
-- `client_app/`: The customer-facing Flutter application.
-- `admin_app/`: The internal Flutter application for admins, partners, and staff.
-- `shared/`: A shared Dart package containing common UI widgets, routing logic, and shared state to prevent code duplication between the two apps.
-- `supabase/`: Contains the backend configuration, primarily the database schema, RLS policies, and triggers.
+A comprehensive, hierarchical JSON dataset of geographical and administrative divisions across India. This dataset is perfect for populating cascading dropdown menus, geographic databases, and location-based filtering.
 
 ---
 
-## What We Have Done Till Now
+## 📑 Table of Contents
 
-### 1. Database & Backend Setup (Supabase)
-- Designed a comprehensive, relational PostgreSQL schema (`schema.sql`).
-- Created tables for:
-  - **profiles**: Extending Supabase Auth with custom roles (client, superadmin, auditorium_owner, event_management), departments, and approval statuses.
-  - **event_rooms & event_room_images**: To store auditorium details, pricing, capacities, and galleries.
-  - **services**: Defining available add-on services (catering, decoration, etc.) with base prices.
-  - **bookings & booking_services**: To handle the core transactional flow, capturing room price snapshots and attaching individual tasks/services to team members.
-  - **payments & expenses**: To track incoming revenue (Razorpay integration) and internal departmental expenses.
-- Created an **admin_billing_view** to automatically calculate revenue, total expenses, and net margin per booking.
-- Implemented robust **Row Level Security (RLS) policies** ensuring:
-  - Clients only see their own bookings and payments.
-  - Team members only see their assigned tasks and logged expenses.
-  - Admins have comprehensive access to manage the platform.
-- Created a **database trigger** (`handle_new_user`) that automatically inserts a new profile row when a user signs up via Supabase Auth, properly setting default roles and putting partners into a 'pending' approval state.
+- [Overview](#-overview)
+- [Data Structure](#-data-structure)
+- [Use Cases](#-use-cases)
+- [Generation Script](#-generation-script)
+- [Acknowledgements](#-acknowledgements)
+- [License](#-license)
 
-### 2. Shared Library Setup
-- Initialized a `shared` Dart package to act as the core dependency for both apps.
-- Centralized the GoRouter configuration logic so both apps can share a consistent routing wrapper while defining their own specific routes.
+---
 
-### 3. Client Application Initialization
-- Created the `client_app` Flutter project.
-- Configured a warm, event-oriented theme (Gold accent).
-- Integrated Supabase initialization using the project URL and Anon Key.
-- Set up Riverpod and defined the core GoRoute structure:
-  - Public routes: Login, Register.
-  - Shell routes with a bottom navigation scaffold: Search, Browse (Home), Events, and Profile.
-  - Dynamic routes: Booking Checkout.
+## 📖 Overview
 
-### 4. Admin Application Initialization
-- Created the `admin_app` Flutter project.
-- Configured a corporate, internal-focused theme (Deep Slate).
-- Integrated Supabase initialization.
-- Set up Riverpod and defined the administrative GoRoute structure:
-  - Auth flows including Unauthorized and Pending Approval screens for unverified partners.
-  - Admin Dashboard for superadmins to view metrics.
-  - Task Assignment routing for specific bookings.
-  - A Team Tasks screen for staff members to manage their assigned work.
+This repository contains `india_locations.json`, a highly detailed list of all locations in India, encompassing:
+- **36** States and Union Territories
+- **700+** Districts
+- **600,000+** Cities, Towns, and Villages
+
+The data is flattened and alphabetically sorted for easy integration into front-end components and back-end databases.
+
+## 🏗 Data Structure
+
+The JSON is formatted as an array of state objects. Each state object contains an array of its constituent districts, and each district contains a sorted array of strings representing all cities, towns, and villages within it.
+
+```json
+[
+  {
+    "state": "State Name",
+    "districts": [
+      {
+        "district": "District Name",
+        "cities": [
+          "City/Village 1",
+          "City/Village 2",
+          "..."
+        ]
+      }
+    ]
+  }
+]
+```
+
+## 🚀 Use Cases
+
+- **Cascading Dropdowns:** Build seamless `State → District → City/Village` selection forms.
+- **Geographical Mapping:** Power location-based search and filtering features.
+- **Data Seeding:** Populate your SQL or NoSQL database with exhaustive Indian location records.
+
+## ⚙️ Generation Script
+
+Included is `fetch_cities.js`, a Node.js script used to generate this dataset. 
+
+It works by:
+1. Downloading raw, highly-nested location data.
+2. Parsing and extracting sub-districts.
+3. Flattening everything into a single `cities` array for each district.
+4. Sorting entries alphabetically to ensure a clean UX for dropdowns.
+
+**Usage:**
+```bash
+node fetch_cities.js
+```
+
+## 🙏 Acknowledgements
+
+This dataset is aggregated and flattened from a comprehensive data collection originally sourced from [villageinfo.in](https://villageinfo.in/) and structured by the amazing open-source community, specifically [pranshumaheshwari/indian-cities-and-villages](https://github.com/pranshumaheshwari/indian-cities-and-villages).
+
+## 📄 License
+
+This project is open-source and available under the MIT License.
