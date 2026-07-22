@@ -96,7 +96,7 @@ A comprehensive and developer-friendly JSON dataset containing every <b>State</b
 ### Download
 
 ```bash
-git clone https://github.com/yourusername/india-locations-json.git
+git clone https://github.com/afnanplk/Indian_State_district_City.git
 ```
 
 ### Node.js
